@@ -2,6 +2,7 @@
     package="com.example.voicephishing">
 
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:label="voicephishing"
