@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:external_path/external_path.dart';
 import 'package:voicephishing/HomeScreen.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:async';
 import 'dart:io';
@@ -16,79 +15,79 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  List<String> _exPath = [];
-  String FileContent = 'a';
+  String _fileContent = 'Loading...';
   PermissionStatus _status = PermissionStatus.denied;
 
   @override
   void initState() {
     super.initState();
-    requestPermission();
-    getPath();
-    getPublicDirectoryPath();
+    _requestStoragePermission();
+    readFile();
   }
 
-  Future<void> requestPermission() async {
-    // 외부 저장소 읽기 권한 요청
-    PermissionStatus status = await Permission.storage.request();
-
-    setState(() {
-      _status = status;
-    });
-  }
-
-  // Get storage directory paths
-  // Like internal and external (SD card) storage path
-  Future<void> getPath() async {
-    List<String> paths;
-    // getExternalStorageDirectories() will return list containing internal storage directory path
-    // And external storage (SD card) directory path (if exists)
-    paths = await ExternalPath.getExternalStorageDirectories();
-
-    setState(() {
-      _exPath = paths; // [/storage/emulated/0, /storage/B3AE-4D28]
-    });
-  }
-
-  // To get public storage directory path like Downloads, Picture, Movie etc.
-  // Use below code
-  Future<void> getPublicDirectoryPath() async {
-    String path;
-
-    path = await ExternalPath.getExternalStoragePublicDirectory(
-        ExternalPath.DIRECTORY_DOWNLOADS);
-
-    try {
-      String FilePath = '$path/test.txt';
-      print(FilePath);
-      print('b');
-
-      File file = File(FilePath);
-      FileContent = await file.readAsString();
-      print(FileContent);
-      print('c');
-    } catch (error) {
-      print('error: $error');
+  Future<void> _requestStoragePermission() async {
+    print('a');
+    final status = await Permission.audio.request();
+    print(status.isGranted);
+    if (status.isGranted) {
+      // 오디오 파일에 액세스할 수 있습니다.
+      //_loadAudioFiles();
+    } else if (status.isPermanentlyDenied) {
+      // 사용자가 권한을 영구히 거부했습니다.
+      openAppSettings();
+    } else {
+      // 권한 요청을 다시 시도하십시오.
     }
+  }
 
-    setState(() {
-      print(path); // /storage/emulated/0/Download
-      print('a');
-    });
+  Future<void> readFile() async {
+    if (_status == PermissionStatus.granted) {
+      try {
+        // Get external storage directory path for downloads
+        String downloadPath = await ExternalPath.getExternalStoragePublicDirectory(
+          ExternalPath.DIRECTORY_DOWNLOADS,
+        );
+
+        // File path for test.mp3
+        String filePath = '$downloadPath/test.mp3';
+
+        // Read the file
+        File file = File(filePath);
+        if (await file.exists()) {
+          // Read file content
+          List<int> bytes = await file.readAsBytes();
+          String fileContent = String.fromCharCodes(bytes);
+          setState(() {
+            _fileContent = fileContent;
+          });
+        } else {
+          setState(() {
+            _fileContent = 'File not found.';
+          });
+        }
+      } catch (error) {
+        setState(() {
+          _fileContent = 'Error: $error';
+        });
+      }
+    } else {
+      setState(() {
+        _fileContent = 'Permission denied.';
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Plugin example app'),
-          ),
-          body: ListView.builder(
-              itemCount: _exPath.length,
-              itemBuilder: (context, index) {
-                return Center(child: Text(FileContent));
-              }),
-        ));
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Read MP3 File Example'),
+        ),
+        body: Center(
+          child: Text(_fileContent),
+        ),
+      ),
+    );
   }
 }
