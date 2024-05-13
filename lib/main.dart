@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:external_path/external_path.dart';
 import 'package:voicephishing/HomeScreen.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -15,47 +16,79 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _fileContents = '';
+  List<String> _exPath = [];
+  String FileContent = 'a';
+  PermissionStatus _status = PermissionStatus.denied;
 
   @override
   void initState() {
     super.initState();
-    readFileFromExternalStorage();
+    requestPermission();
+    getPath();
+    getPublicDirectoryPath();
   }
 
-  Future<void> readFileFromExternalStorage() async {
+  Future<void> requestPermission() async {
+    // 외부 저장소 읽기 권한 요청
+    PermissionStatus status = await Permission.storage.request();
+
+    setState(() {
+      _status = status;
+    });
+  }
+
+  // Get storage directory paths
+  // Like internal and external (SD card) storage path
+  Future<void> getPath() async {
+    List<String> paths;
+    // getExternalStorageDirectories() will return list containing internal storage directory path
+    // And external storage (SD card) directory path (if exists)
+    paths = await ExternalPath.getExternalStorageDirectories();
+
+    setState(() {
+      _exPath = paths; // [/storage/emulated/0, /storage/B3AE-4D28]
+    });
+  }
+
+  // To get public storage directory path like Downloads, Picture, Movie etc.
+  // Use below code
+  Future<void> getPublicDirectoryPath() async {
+    String path;
+
+    path = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOWNLOADS);
+
     try {
-      // 플랫폼별로 파일 시스템의 디렉토리 경로 가져오기
-      Directory? directory = await getExternalStorageDirectory();
-      String? rootPath = directory?.path;
+      String FilePath = '$path/test.txt';
+      print(FilePath);
+      print('b');
 
-      // 외부 저장소에 있는 텍스트 파일 경로 설정 (예시: 'myfile.txt')
-      String filePath = '$rootPath/test.txt';
-
-      // 파일 읽기
-      File file = File(filePath);
-      String contents = await file.readAsString();
-
-      // 파일 내용 출력
-      setState(() {
-        _fileContents = contents;
-      });
-    } catch (e) {
-      print('파일 읽기 오류: $e');
+      File file = File(FilePath);
+      FileContent = await file.readAsString();
+      print(FileContent);
+      print('c');
+    } catch (error) {
+      print('error: $error');
     }
+
+    setState(() {
+      print(path); // /storage/emulated/0/Download
+      print('a');
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('외부 저장소의 텍스트 파일 읽기'),
-        ),
-        body: Center(
-          child: Text(_fileContents),
-        ),
-      ),
-    );
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Plugin example app'),
+          ),
+          body: ListView.builder(
+              itemCount: _exPath.length,
+              itemBuilder: (context, index) {
+                return Center(child: Text(FileContent));
+              }),
+        ));
   }
 }
