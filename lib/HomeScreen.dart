@@ -56,7 +56,7 @@ class _PermissionDemoState extends State<PermissionDemo> {
 
   Future<void> _requestStoragePermission() async {
     print('a');
-    final status = await Permission.storage.status;
+    final status = await Permission.audio.status;
     if (status.isGranted) {
       // 권한이 허용된 경우
       print('저장소 접근 권한이 허용되었습니다.');
