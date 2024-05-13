@@ -16,4 +16,18 @@ class getAudio {
       // 권한 요청을 다시 시도하십시오.
     }
   }
+
+  Future<String> getFilePath() async {
+    String path = '';
+
+    try {
+      path = await ExternalPath.getExternalStoragePublicDirectory(
+          ExternalPath.DIRECTORY_DOWNLOADS);
+      print('path-->$path');
+    } catch (error) {
+      print('error--> $error');
+    }
+
+    return path;
+  }
 }
