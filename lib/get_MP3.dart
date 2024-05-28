@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:path/path.dart' as p;
+import 'package:serious_python/serious_python.dart';
 
 class getAudio {
   Future<void> getAudioPermission() async {
@@ -18,7 +20,7 @@ class getAudio {
     }
   }
 
-  Future<String> getMp3FilePath(String FileName) async {
+  Future<String> getFilePath(String FileName) async {
     String mp3FilePath = "NoData";
     if (Platform.isAndroid) {
       final Directory downloadsDirectory = Directory('/storage/emulated/0/Download');
@@ -30,9 +32,32 @@ class getAudio {
     return mp3FilePath;
   }
 
-  Future<String> AnalyzeMp3(String FileName) async {
-    String mp3FilePath = await getMp3FilePath(FileName);
-    
-    return 'a';
+  Future<String> STT(String FileName) async {
+    String WAVFilePath = await getFilePath(FileName);
+    String res = "No data";
+
+    Directory tempDir =
+    await (await getTemporaryDirectory()).createTemp("python_communication");
+    String resultFileName = p.join(tempDir.path, "out.txt");
+    await SeriousPython.run("python/test.py",
+        environmentVariables: {
+          "RESULT_FILENAME": resultFileName,
+          "WAV_FILENAME": WAVFilePath
+        },
+        sync: false);
+
+    var i = 30;
+    while (i-- > 0) {
+      var out = File(resultFileName);
+      if (await out.exists()) {
+        var r = await out.readAsString();
+        res = r;
+        break;
+      } else {
+        await Future.delayed(const Duration(seconds: 1));
+      }
+    }
+
+    return res;
   }
 }
