@@ -18,8 +18,8 @@ class getAudio {
     }
   }
 
-  Future<String?> getMp3FilePath(String FileName) async {
-    String? mp3FilePath;
+  Future<String> getMp3FilePath(String FileName) async {
+    String mp3FilePath = "NoData";
     if (Platform.isAndroid) {
       final Directory downloadsDirectory = Directory('/storage/emulated/0/Download');
 
@@ -28,5 +28,11 @@ class getAudio {
       debugPrint(File(mp3FilePath!).existsSync().toString());
     }
     return mp3FilePath;
+  }
+
+  Future<String> AnalyzeMp3(String FileName) async {
+    String mp3FilePath = await getMp3FilePath(FileName);
+    
+    return 'a';
   }
 }
