@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -64,6 +67,20 @@ class _PermissionDemoState extends State<PermissionDemo> {
       // 권한이 거부된 경우
       print('저장소 접근 권한이 거부되었습니다.');
     }
+    getMp3FilePath();
+  }
+
+  Future<void> getMp3FilePath() async {
+    print('b');
+    Directory? downloadsDirectory;
+    if (Platform.isAndroid) {
+      downloadsDirectory = await getExternalStorageDirectory();
+    }
+    print('c');
+    if (downloadsDirectory != null) {
+      print(p.join(downloadsDirectory.path, 'Download', 'test.mp3'));
+    }
+    print('d');
   }
 
   @override
