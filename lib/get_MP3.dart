@@ -1,6 +1,8 @@
-
-import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:path/path.dart' as p;
 
 class getAudio {
   Future<void> getAudioPermission() async {
@@ -10,10 +12,21 @@ class getAudio {
       // 오디오 파일에 액세스할 수 있습니다.
       //_loadAudioFiles();
     } else if (status.isPermanentlyDenied) {
-      // 사용자가 권한을 영구히 거부했습니다.
       openAppSettings();
     } else {
       // 권한 요청을 다시 시도하십시오.
     }
+  }
+
+  Future<String?> getMp3FilePath(String FileName) async {
+    String? mp3FilePath;
+    if (Platform.isAndroid) {
+      final Directory downloadsDirectory = Directory('/storage/emulated/0/Download');
+
+      mp3FilePath = p.join(downloadsDirectory.path, FileName);
+      debugPrint(mp3FilePath);
+      debugPrint(File(mp3FilePath!).existsSync().toString());
+    }
+    return mp3FilePath;
   }
 }

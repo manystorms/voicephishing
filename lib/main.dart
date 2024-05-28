@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
 import 'package:voicephishing/HomeScreen.dart';
@@ -71,6 +70,10 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _mp3Result = "Playing...";
       });
+
+      Duration? duration = await audioPlayer.getDuration();
+      print('d');
+      print(duration);
     } else {
       setState(() {
         _mp3Result = "File not found";
