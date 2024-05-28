@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
@@ -51,6 +52,9 @@ class PermissionDemo extends StatefulWidget {
 }
 
 class _PermissionDemoState extends State<PermissionDemo> {
+  AudioPlayer audioPlayer = AudioPlayer();
+  String? mp3FilePath;
+
   @override
   void initState() {
     super.initState();
@@ -78,9 +82,21 @@ class _PermissionDemoState extends State<PermissionDemo> {
     }
     print('c');
     if (downloadsDirectory != null) {
-      print(p.join(downloadsDirectory.path, 'Download', 'test.mp3'));
+      mp3FilePath = p.join(downloadsDirectory.path, 'Download', 'test.mp3');
+      print('mp3');
+      print(mp3FilePath);
     }
     print('d');
+    playMP3();
+  }
+
+  Future<void> playMP3() async {
+    if (mp3FilePath != null && File(mp3FilePath!).existsSync()) {
+      await audioPlayer.play(DeviceFileSource(mp3FilePath!));
+      print('play');
+    } else {
+      print('error');
+    }
   }
 
   @override

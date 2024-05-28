@@ -1,4 +1,4 @@
-import 'package:external_path/external_path.dart';
+
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -15,19 +15,5 @@ class getAudio {
     } else {
       // 권한 요청을 다시 시도하십시오.
     }
-  }
-
-  Future<String> getFilePath() async {
-    String path = '';
-
-    try {
-      path = await ExternalPath.getExternalStoragePublicDirectory(
-          ExternalPath.DIRECTORY_DOWNLOADS);
-      print('path-->$path');
-    } catch (error) {
-      print('error--> $error');
-    }
-
-    return path;
   }
 }
