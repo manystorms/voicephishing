@@ -44,10 +44,6 @@ class getAudio {
     Directory tempDir =
     await (await getTemporaryDirectory()).createTemp("python_communication");
     String resultFileName = p.join(tempDir.path, "out.txt");
-    String FilePath = p.join(tempDir.path, "ReadTxtTest.txt");
-    File file = File(FilePath);
-    await file.writeAsString("asdfAsㅁㅁㅁ");
-    WAVFilePath = FilePath;
 
     await SeriousPython.run("python/test.py",
         environmentVariables: {
