@@ -2,7 +2,7 @@ import os
 import sys
 from time import sleep
 
-from op import add
+#from op import add
 
 result_filename = os.getenv("RESULT_FILENAME")
 wav_filename = os.getenv("WAV_FILENAME")
@@ -19,7 +19,10 @@ if not result_filename:
 #else:
 #    res = "0"
 
-res = str(123)
+if os.path.exists(wav_filename):
+    res = str(os.path.getsize(wav_filename))
+else:
+    res = "0"
 
 with open(result_filename, "w") as f:
     f.write(res)
