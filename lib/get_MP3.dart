@@ -32,6 +32,11 @@ class getAudio {
     return mp3FilePath;
   }
 
+  /*Future<String> PythonBridge(String FilePath) {
+    String temp = "a";
+    return temp;
+  }*/
+
   Future<String> STT(String FileName) async {
     String WAVFilePath = await getFilePath(FileName);
     String res = "No data";
@@ -39,6 +44,11 @@ class getAudio {
     Directory tempDir =
     await (await getTemporaryDirectory()).createTemp("python_communication");
     String resultFileName = p.join(tempDir.path, "out.txt");
+    String FilePath = p.join(tempDir.path, "ReadTxtTest.txt");
+    File file = File(FilePath);
+    await file.writeAsString("asdfAsㅁㅁㅁ");
+    WAVFilePath = FilePath;
+
     await SeriousPython.run("python/test.py",
         environmentVariables: {
           "RESULT_FILENAME": resultFileName,
