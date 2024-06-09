@@ -2,7 +2,7 @@ import os
 import sys
 from time import sleep
 
-#from op import add
+import speech_recognition as sr
 
 result_filename = os.getenv("RESULT_FILENAME")
 wav_filename = os.getenv("WAV_FILENAME")
@@ -12,17 +12,15 @@ if not result_filename:
     print("RESULT_FILENAME is not set")
     exit(1)
 
-# WAV 파일이 존재하고 확장자가 .wav인지 확인
-#if os.path.exists(wav_filename) and wav_filename.lower().endswith('.wav'):
-#    with open(wav_filename, 'rb') as file:
-#            res = "1"
-#else:
-#    res = "0"
+try:
+    r = sr.Recognizer()
+    harvard = sr.AudioFile(wav_filename)
+    with harvard as source:
+      audio = r.record(source) # .wav파일을 오디오 데이터 인스터스로
 
-if os.path.exists(wav_filename):
-    res = str(os.path.getsize(wav_filename))
-else:
-    res = "0"
+    res = r.recognize_google(audio, language='ko-KR')
+except Exception as e:
+    res = str(e)
 
 with open(result_filename, "w") as f:
     f.write(res)
