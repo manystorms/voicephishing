@@ -13,7 +13,8 @@ class ResultScreen extends StatefulWidget {
 class _ResultScreenState extends State<ResultScreen>{
   String AudioText = "변환중입니다";
   Future<void> _getAudioText() async {
-    AudioText = await SpeechToText(widget.audioFile.Path);
+    getAudioText SpeechToTextClass = getAudioText();
+    AudioText = await SpeechToTextClass.recognizeAudioFile(widget.audioFile.Path);
     setState(() {});
   }
 
