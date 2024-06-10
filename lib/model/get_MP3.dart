@@ -2,10 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:vosk_flutter_2/vosk_flutter_2.dart';
 
-import 'package:voicephishing/model/get_FilePath.dart';
-
 class getSTT {
-  /*Future<String> VoskBridge(String audioFilePath) async {
+  Future<String> _VoskBridge(String audioFilePath) async {
     final vosk = VoskFlutterPlugin.instance();
     final ModelPath = await ModelLoader()
         .loadFromAssets('assets/models/vosk-model-small-en-us-0.15.zip');
@@ -45,14 +43,11 @@ class getSTT {
 
     // 인식 결과를 반환합니다.
     return result;
-  }*/
+  }
 
-  Future<String> STT(String FileName) async {
-    ManageFilePath getFilePath = ManageFilePath();
-
-    //String audioFilePath = await getFilePath.getAudioFilePath(FileName);
+  Future<String> STT(String audioFilePath) async {
     String res = "No data";
 
-    return res;
+    return _VoskBridge(audioFilePath);
   }
 }
