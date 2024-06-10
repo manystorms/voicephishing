@@ -24,8 +24,8 @@ class ManageFilePath {
       return AudioDirectoryPath;
     }else{
       final String downloadsDirectoryPath = await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOADS);
-      //return AudioDirectoryPath = p.join(downloadsDirectoryPath, 'KakaoTalk');
-      return AudioDirectoryPath = downloadsDirectoryPath;
+      return AudioDirectoryPath = p.join(downloadsDirectoryPath, 'KakaoTalk');
+      //return AudioDirectoryPath = downloadsDirectoryPath;
     }
   }
 
@@ -59,11 +59,16 @@ class AudioFile{
         this.ShowingDate = _formatDateTime(Date);
 
   static String _ExtractFileName(String FilePath) {
-    int lastSeparator = FilePath.lastIndexOf('/');
-    int lastDot = FilePath.substring(lastSeparator + 1).lastIndexOf('.');
-    lastDot = lastDot != -1 ? lastDot + lastSeparator + 1 : -1;
+    int lastSeparator = FilePath.lastIndexOf('/'); // 마지막 '/'의 위치
+    int lastDot = FilePath.substring(lastSeparator + 1).lastIndexOf('.'); // 마지막 '.'의 위치
 
-    return FilePath.substring(lastSeparator + 1, lastDot);
+    // 확장자가 없는 경우, 전체 파일 이름을 반환
+    if (lastDot == -1) {
+      return FilePath.substring(lastSeparator + 1);
+    }
+
+    // 확장자가 있는 경우, 파일 이름만 추출
+    return FilePath.substring(lastSeparator + 1, lastSeparator + 1 + lastDot);
   }
 
   static String _formatDateTime(DateTime dateTime) {

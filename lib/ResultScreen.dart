@@ -33,7 +33,7 @@ class _ResultScreenState extends State<ResultScreen>{
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text("Path: ${widget.audioFile.ShowingDate}", style: TextStyle(fontSize: 18)),
+            Text("Date: ${widget.audioFile.ShowingDate}", style: TextStyle(fontSize: 12)),
             Text(AudioText, style: TextStyle(fontSize: 18)),
           ],
         ),

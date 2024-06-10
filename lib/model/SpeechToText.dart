@@ -10,7 +10,7 @@ Future<String> SpeechToText(String audioFilePath) async {
 
   final recognizer = await vosk.createRecognizer(
     model: model,
-    sampleRate: 16000,
+    sampleRate: 10000,
   );
 
   File audioFile = File(audioFilePath);
@@ -19,7 +19,7 @@ Future<String> SpeechToText(String audioFilePath) async {
   String result = "";
 
   int pos = 0;
-  int chunkSize = 20000; // 처리할 데이터 덩어리의 크기를 정의합니다.
+  int chunkSize = 1500; // 처리할 데이터 덩어리의 크기를 정의합니다.
   while (pos + chunkSize < audioBytes.length) {
     bool isFinal = await recognizer.acceptWaveformBytes(
         audioBytes.sublist(pos, pos + chunkSize));
