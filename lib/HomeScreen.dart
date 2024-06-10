@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:voicephishing/model/get_MP3.dart';
 import 'package:voicephishing/model/get_FilePath.dart';
+import 'package:voicephishing/ResultScreen.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -19,66 +17,97 @@ class VoicePhishingDetector extends StatefulWidget {
 }
 
 class _VoicePhishingDetectorState extends State<VoicePhishingDetector> {
-  String? _filePath;
-  String _analysisResult = '';
+  List<AudioFile> AudioFileList = [];
   bool _isAnalyzing = false;
 
-  Future<void> pickFile() async {
-    final result = await FilePicker.platform.pickFiles();
-    if (result != null) {
-      setState(() {
-        _filePath = result.files.single.path;
-      });
-    }
-  }
-
-  Future<void> analyzeFile() async {
-    if (_filePath == null) {
-      return;
-    }
-
+  Future<void> _updateAudioFileList() async {
     setState(() {
       _isAnalyzing = true;
-      _analysisResult = ''; // 분석 중에 이전 결과를 지웁니다.
     });
 
     ManageFilePath a = ManageFilePath();
-    List<FileSystemEntity> b = await a.getFileList();
-    print(b);
+    AudioFileList = await a.getFileList();
 
-    // 분석 결과를 받아서 상태를 업데이트합니다.
+    print('aaaa');
+    for (AudioFile file in AudioFileList) {
+      print("Path: ${file.Path}, Name: ${file.Name}, Date: ${file.ShowingDate}");
+    }
+
     setState(() {
       _isAnalyzing = false;
-      _analysisResult = "이 파일은 보이스피싱입니다!"; // 예시 결과
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _updateAudioFileList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFFD2BD),
       body: SafeArea(
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center, // Center horizontally
             children: <Widget>[
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: pickFile,
-                child: Text('음성 파일 선택'),
-              ),
-              SizedBox(height: 20),
-              Text(_filePath ?? '파일을 선택해주세요.'),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: analyzeFile,
-                child: Text('분석 시작'),
-              ),
-              SizedBox(height: 20),
               _isAnalyzing ? CircularProgressIndicator() : Container(),
-              SizedBox(height: 20),
-              if (_analysisResult.isNotEmpty)
-                Text(_analysisResult, style: TextStyle(fontSize: 18, color: Colors.red)),
+              Expanded(child:
+                RefreshIndicator(
+                  onRefresh: _updateAudioFileList,
+                  child: ListView.builder(
+                    itemCount: AudioFileList.length,
+                    itemBuilder: (context, index) {
+                      AudioFile file = AudioFileList[index];
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ResultScreen(audioFile: file)),
+                          );
+                        },
+                          child: Container(
+                            margin: EdgeInsets.all(5), // 각 아이템 간의 간격
+                            decoration: BoxDecoration(
+                              color: Colors.white, // 배경색
+                              border: Border.all(
+                                color: Colors.blue, // 테두리 색상
+                                width: 1, // 테두리 두께
+                              ),
+                              borderRadius: BorderRadius.circular(10), // 테두리 둥글게
+                            ),
+                            child: ListTile(
+                              title: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(file.Name,
+                                        style: TextStyle(
+                                          fontFamily: 'Plus Jakarta Sans',
+                                          fontSize: 25,
+                                          letterSpacing: 0,
+                                        ),
+                                      ),
+                                      Text(file.ShowingDate),
+                                    ],
+                                  ),
+                                  Icon(
+                                    Icons.file_open_rounded,
+                                    color: Colors.black,
+                                    size: 24.0, // 원하는 크기로 설정 가능
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                      );
+                    },
+                  ),
+                )
+              ),
             ],
           ),
         ),

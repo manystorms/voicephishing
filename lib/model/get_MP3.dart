@@ -50,7 +50,7 @@ class getSTT {
   Future<String> STT(String FileName) async {
     ManageFilePath getFilePath = ManageFilePath();
 
-    String audioFilePath = await getFilePath.getAudioFilePath(FileName);
+    //String audioFilePath = await getFilePath.getAudioFilePath(FileName);
     String res = "No data";
 
     return res;

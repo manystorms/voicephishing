@@ -25,27 +25,53 @@ class ManageFilePath {
     }else{
       final String downloadsDirectoryPath = await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOADS);
       //return AudioDirectoryPath = p.join(downloadsDirectoryPath, 'KakaoTalk');
-      return downloadsDirectoryPath;
+      return AudioDirectoryPath = downloadsDirectoryPath;
     }
   }
 
-  Future<String> getAudioFilePath(String FileName) async {
-    if(await _getAudioStoragePermission() == false) return "Permission Denied";
-
-    String mp3FilePath = "NoData";
-    if (Platform.isAndroid) {
-      mp3FilePath = p.join(await _getAudioDirectoryPath(), FileName);
-      print(mp3FilePath);
-      print(File(mp3FilePath!).existsSync().toString());
-    }
-    return mp3FilePath;
-  }
-
-  Future<List<FileSystemEntity>> getFileList() async {
+  Future<List<AudioFile>> getFileList() async {
     if(await _getAudioStoragePermission() == false) return [];
 
     await _getAudioDirectoryPath();
     Directory dir = Directory(AudioDirectoryPath);
-    return dir.listSync();
+    List<FileSystemEntity> FileEntity = dir.listSync();
+
+    List<AudioFile> res = [];
+
+    for (FileSystemEntity file in FileEntity) {
+      FileStat stats = await file.stat();
+      res.add(AudioFile(Path: file.path, Date: stats.modified));
+    }
+    return res;
+  }
+}
+
+class AudioFile{
+  String Path;
+  String Name;
+  DateTime Date;
+  String ShowingDate;
+
+  AudioFile({required Path, required Date})
+      : this.Path = Path,
+        this.Date = Date,
+        this.Name = _ExtractFileName(Path),
+        this.ShowingDate = _formatDateTime(Date);
+
+  static String _ExtractFileName(String FilePath) {
+    int lastSeparator = FilePath.lastIndexOf('/');
+    int lastDot = FilePath.substring(lastSeparator + 1).lastIndexOf('.');
+    lastDot = lastDot != -1 ? lastDot + lastSeparator + 1 : -1;
+
+    return FilePath.substring(lastSeparator + 1, lastDot);
+  }
+
+  static String _formatDateTime(DateTime dateTime) {
+    String month = dateTime.month.toString().padLeft(2, '0');
+    String day = dateTime.day.toString().padLeft(2, '0');
+    String hour = dateTime.hour.toString().padLeft(2, '0');
+    String minute = dateTime.minute.toString().padLeft(2, '0');
+
+    return "$month-$day $hour:$minute";
   }
 }
