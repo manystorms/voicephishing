@@ -11,10 +11,13 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen>{
-  String AudioText = "변환중입니다";
+  bool _isAnalyzing = true;
+
+  String AudioText = "";
   Future<void> _getAudioText() async {
     getAudioText SpeechToTextClass = getAudioText();
     AudioText = await SpeechToTextClass.recognizeAudioFile(widget.audioFile.Path);
+    _isAnalyzing = false;
     setState(() {});
   }
 
@@ -34,7 +37,10 @@ class _ResultScreenState extends State<ResultScreen>{
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text("Date: ${widget.audioFile.ShowingDate}", style: TextStyle(fontSize: 12)),
+            Text("녹음 텍스트", style: TextStyle(fontSize: 24)),
+            _isAnalyzing
+                ? Center(child: CircularProgressIndicator()) // 중앙 정렬
+                : Container(),
             Text(AudioText, style: TextStyle(fontSize: 18)),
           ],
         ),
