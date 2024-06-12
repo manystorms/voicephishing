@@ -11,40 +11,47 @@ class ResultScreen extends StatefulWidget {
   _ResultScreenState createState() => _ResultScreenState();
 }
 
-class _ResultScreenState extends State<ResultScreen>{
+class _ResultScreenState extends State<ResultScreen> {
   bool _isAnalyzing = true;
+  String audioText = "";
+  List<String> audioSentences = [];
+  List<double> audioVoicephishingCheck = [];
 
-  String AudioText = "";
   Future<void> _getAudioText() async {
-    await _getAnalyzeData();
-    getAudioText SpeechToTextClass = getAudioText();
-    AudioText = await SpeechToTextClass.recognizeAudioFile(widget.audioFile.Path);
+    getAudioText speechToTextClass = getAudioText();
+    audioText = await speechToTextClass.recognizeAudioFile(widget.audioFile.Path);
     _isAnalyzing = false;
     setState(() {});
+
+    await _getAnalyzeData();
   }
 
   Future<void> _getAnalyzeData() async {
-    WidgetsFlutterBinding.ensureInitialized();
+    audioSentences = audioText.split(RegExp(r'\.\s+'));
+    audioVoicephishingCheck.clear();
+
     final classifier = TextClassifier();
 
-    // 모델과 토크나이저 초기화를 기다립니다.
     await classifier.initialize();
 
-    String text = "네 체크카드 제가 지금 현재 이렇게 약간 사용하고 있는 건 그거 하나밖에 없어요.";
     try {
-      double result = await classifier.classifyText(text);
-      print("예측 결과: $result");
+      for (String text in audioSentences) {
+        double result = await classifier.classifyText(text);
+        audioVoicephishingCheck.add(result);
+        print("문자: $text, 예측 결과: $result");
+      }
     } catch (e) {
       print('분류 중 오류가 발생했습니다: $e');
     } finally {
-      // 리소스 정리
       classifier.dispose();
     }
+    print(audioSentences);
+    print(audioVoicephishingCheck);
   }
-
 
   @override
   void initState() {
+    super.initState();
     _getAudioText();
   }
 
@@ -58,12 +65,59 @@ class _ResultScreenState extends State<ResultScreen>{
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
+          children: [
             Text("녹음 텍스트", style: TextStyle(fontSize: 24)),
             _isAnalyzing
-                ? Center(child: CircularProgressIndicator()) // 중앙 정렬
-                : Container(),
-            Text(AudioText, style: TextStyle(fontSize: 18)),
+                ? Center(child: CircularProgressIndicator())
+                : Flexible(
+              child: Text(audioText, style: TextStyle(fontSize: 18)),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: audioSentences.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    margin: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.blue,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ListTile(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  (0.1 * 100).toString(),
+                                  style: TextStyle(
+                                    fontFamily: 'Plus Jakarta Sans',
+                                    fontSize: 17,
+                                    letterSpacing: 0,
+                                  ),
+                                ),
+                                Text(audioSentences[index]),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            Icons.file_open_rounded,
+                            color: Colors.black,
+                            size: 24.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

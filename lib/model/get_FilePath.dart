@@ -24,8 +24,8 @@ class ManageFilePath {
       return AudioDirectoryPath;
     }else{
       final String downloadsDirectoryPath = await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOADS);
-      return AudioDirectoryPath = p.join(downloadsDirectoryPath, 'KakaoTalk');
-      //return AudioDirectoryPath = downloadsDirectoryPath;
+      //return AudioDirectoryPath = p.join(downloadsDirectoryPath, 'KakaoTalk');
+      return AudioDirectoryPath = downloadsDirectoryPath;
     }
   }
 
