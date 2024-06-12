@@ -12,6 +12,7 @@ import 'home_screen_model.dart';
 export 'home_screen_model.dart';
 
 import 'package:voicephishing/model/get_FilePath.dart';
+import 'package:voicephishing/pages/result_screen/result_screen_widget.dart';
 
 class List07UserSearchWidget extends StatefulWidget {
   const List07UserSearchWidget({super.key});
@@ -28,9 +29,33 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
 
   final animationsMap = <String, AnimationInfo>{};
 
+  List<AudioFile> AudioFileList = [];
+  bool _isAnalyzing = false;
+
+  Future<void> _updateAudioFileList() async {
+    setState(() {
+      _isAnalyzing = true;
+    });
+
+    ManageFilePath a = ManageFilePath();
+    AudioFileList = await a.getFileList();
+
+    print('aaaa');
+    for (AudioFile file in AudioFileList) {
+      print("Path: ${file.Path}, Name: ${file.Name}, Date: ${file.ShowingDate}");
+    }
+
+    setState(() {
+      _isAnalyzing = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+
+    _updateAudioFileList();
+
     _model = createModel(context, () => List07UserSearchModel());
 
     _model.textController ??= TextEditingController();
@@ -59,7 +84,7 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
     });
     setupAnimations(
       animationsMap.values.where((anim) =>
-          anim.trigger == AnimationTrigger.onActionTrigger ||
+      anim.trigger == AnimationTrigger.onActionTrigger ||
           !anim.applyInitialState),
       this,
     );
@@ -87,9 +112,9 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
           title: Text(
             'Anti Voicephishing',
             style: FlutterFlowTheme.of(context).headlineSmall.override(
-                  fontFamily: 'Outfit',
-                  letterSpacing: 0.0,
-                ),
+              fontFamily: 'Outfit',
+              letterSpacing: 0.0,
+            ),
           ),
           actions: [],
           centerTitle: false,
@@ -109,12 +134,12 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
                   obscureText: false,
                   decoration: InputDecoration(
                     isDense: false,
-                    labelText: 'Search for patients...',
+                    labelText: 'Search for files',
                     labelStyle:
-                        FlutterFlowTheme.of(context).labelMedium.override(
-                              fontFamily: 'Readex Pro',
-                              letterSpacing: 0.0,
-                            ),
+                    FlutterFlowTheme.of(context).labelMedium.override(
+                      fontFamily: 'Readex Pro',
+                      letterSpacing: 0.0,
+                    ),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: FlutterFlowTheme.of(context).primaryBackground,
@@ -151,135 +176,110 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
                     ),
                   ),
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
-                        fontFamily: 'Readex Pro',
-                        letterSpacing: 0.0,
-                      ),
+                    fontFamily: 'Readex Pro',
+                    letterSpacing: 0.0,
+                  ),
                   maxLines: null,
                   validator:
-                      _model.textControllerValidator.asValidator(context),
+                  _model.textControllerValidator.asValidator(context),
                 ),
               ),
+              _isAnalyzing ? CircularProgressIndicator() : Container(),
               Expanded(
                 child: Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 0.0),
-                  child: ListView(
+                  child: ListView.builder(
                     padding: EdgeInsets.zero,
                     scrollDirection: Axis.vertical,
-                    children: [
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-                        child: Container(
-                          width: 100.0,
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 0.0,
-                                color: FlutterFlowTheme.of(context).alternate,
-                                offset: Offset(
-                                  0.0,
-                                  1.0,
-                                ),
-                              )
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            12.0, 0.0, 0.0, 0.0),
-                                        child: Text(
-                                          'Randy Rudolph',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyLarge
-                                              .override(
-                                                fontFamily: 'Readex Pro',
-                                                letterSpacing: 0.0,
-                                              ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0.0, 4.0, 0.0, 0.0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      12.0, 0.0, 0.0, 0.0),
-                                              child: Text(
-                                                '(123) 456-7890',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .labelMedium
-                                                        .override(
-                                                          fontFamily:
-                                                              'Readex Pro',
-                                                          letterSpacing: 0.0,
-                                                        ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(4.0, 0.0, 0.0, 0.0),
-                                              child: Text(
-                                                'name@domain.com',
-                                                style: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      fontFamily: 'Readex Pro',
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      letterSpacing: 0.0,
-                                                    ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                    itemCount: AudioFileList.length,
+                    itemBuilder: (context, index) {
+                      AudioFile file = AudioFileList[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ResultScreenWidget(audioFile: file)),
+                          );
+                        },
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
+                          child: Container(
+                            width: 100.0,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 0.0,
+                                  color: Colors.grey,
+                                  offset: Offset(
+                                    0.0,
+                                    1.0,
                                   ),
-                                ),
-                                Card(
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
-                                  elevation: 1.0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(40.0),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(4.0),
-                                    child: Icon(
-                                      Icons.keyboard_arrow_right_rounded,
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryText,
-                                      size: 24.0,
-                                    ),
-                                  ),
-                                ),
+                                )
                               ],
                             ),
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                              12.0, 0.0, 0.0, 0.0),
+                                          child: Text(
+                                            file.Name,
+                                            style: Theme.of(context).textTheme.bodyLarge,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 4.0, 0.0, 0.0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsetsDirectional.fromSTEB(
+                                                    12.0, 0.0, 0.0, 0.0),
+                                                child: Text(
+                                                  file.ShowingDate,
+                                                  style:
+                                                  Theme.of(context).textTheme.labelMedium,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Card(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    color: Theme.of(context).primaryColorLight,
+                                    elevation: 1.0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(40.0),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: Icon(
+                                        Icons.keyboard_arrow_right_rounded,
+                                        color: Theme.of(context).secondaryHeaderColor,
+                                        size: 24.0,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        ).animateOnPageLoad(
-                            animationsMap['containerOnPageLoadAnimation']!),
-                      ),
-                    ],
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),

@@ -16,6 +16,8 @@ import 'serialization_util.dart';
 export 'package:go_router/go_router.dart';
 export 'serialization_util.dart';
 
+import 'package:voicephishing/model/get_FilePath.dart';
+
 const kTransitionInfoKey = '__transition_info__';
 
 class AppStateNotifier extends ChangeNotifier {
@@ -32,29 +34,34 @@ class AppStateNotifier extends ChangeNotifier {
   }
 }
 
+class MyAudioFile {
+  static final dummy = AudioFile(Path: "/dummy/path", Date: DateTime.now());
+}
+
 GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
-      initialLocation: '/list07UserSearch',
-      debugLogDiagnostics: true,
-      refreshListenable: appStateNotifier,
-      errorBuilder: (context, state) => ResultScreenWidget(),
-      routes: [
-        FFRoute(
-          name: '_initialize',
-          path: '/',
-          builder: (context, _) => ResultScreenWidget(),
-        ),
-        FFRoute(
-          name: 'ResultScreen',
-          path: '/resultScreen',
-          builder: (context, params) => ResultScreenWidget(),
-        ),
-        FFRoute(
-          name: 'List07UserSearch',
-          path: '/list07UserSearch',
-          builder: (context, params) => List07UserSearchWidget(),
-        )
-      ].map((r) => r.toRoute(appStateNotifier)).toList(),
-    );
+  initialLocation: '/list07UserSearch',
+  debugLogDiagnostics: true,
+  refreshListenable: appStateNotifier,
+  errorBuilder: (context, state) => ResultScreenWidget(audioFile: MyAudioFile.dummy),
+  routes: [
+    FFRoute(
+      name: '_initialize',
+      path: '/',
+      builder: (context, _) => ResultScreenWidget(audioFile: MyAudioFile.dummy),
+    ),
+    FFRoute(
+      name: 'ResultScreen',
+      path: '/resultScreen',
+      builder: (context, params) => ResultScreenWidget(audioFile: MyAudioFile.dummy),
+    ),
+    FFRoute(
+      name: 'List07UserSearch',
+      path: '/list07UserSearch',
+      builder: (context, params) => List07UserSearchWidget(),
+    )
+  ].map((r) => r.toRoute(appStateNotifier)).toList(),
+);
+
 
 extension NavParamExtensions on Map<String, String?> {
   Map<String, String> get withoutNulls => Map.fromEntries(

@@ -13,8 +13,13 @@ import 'package:provider/provider.dart';
 import 'result_screen_model.dart';
 export 'result_screen_model.dart';
 
+import 'package:voicephishing/model/get_FilePath.dart';
+import 'package:voicephishing/model/SpeechToText.dart';
+import 'package:voicephishing/model/AnalyzeText.dart';
+
 class ResultScreenWidget extends StatefulWidget {
-  const ResultScreenWidget({super.key});
+  final AudioFile audioFile;
+  ResultScreenWidget({required this.audioFile});
 
   @override
   State<ResultScreenWidget> createState() => _ResultScreenWidgetState();
@@ -22,6 +27,56 @@ class ResultScreenWidget extends StatefulWidget {
 
 class _ResultScreenWidgetState extends State<ResultScreenWidget>
     with TickerProviderStateMixin {
+
+  bool _isAnalyzing = true;
+  String audioText = "";
+  List<String> audioSentences = [];
+  List<double> audioVoicephishingCheck = [];
+  double TotalVoicephishingCheck = 0;
+  String VoicePhishingShow = 'waiting';
+
+  Future<void> _getAudioText() async {
+    getAudioText speechToTextClass = getAudioText();
+    audioText = await speechToTextClass.recognizeAudioFile(widget.audioFile.Path);
+
+    await _getAnalyzeData();
+
+    VoicePhishingShow = '보이스피싱이 의심됩니다';
+    _isAnalyzing = false;
+
+    setState(() {});
+  }
+
+  Future<void> _getAnalyzeData() async {
+    audioSentences = audioText.split(RegExp(r'\.\s+'));
+    audioVoicephishingCheck.clear();
+
+    final classifier = TextClassifier();
+
+    await classifier.initialize();
+
+    try {
+      int TotalAudioTextLen = 0;
+      double TotalRes = 0;
+      for (String text in audioSentences) {
+        double result = await classifier.classifyText(text);
+        audioVoicephishingCheck.add(result);
+        print("문자: $text, 예측 결과: $result");
+
+        TotalAudioTextLen = TotalAudioTextLen+text.length;
+        TotalRes = TotalRes+text.length*result;
+      }
+      TotalVoicephishingCheck = TotalRes/TotalAudioTextLen.toDouble();
+    } catch (e) {
+      print('분류 중 오류가 발생했습니다: $e');
+    } finally {
+      classifier.dispose();
+    }
+    print(audioSentences);
+    print(audioVoicephishingCheck);
+  }
+
+
   late ResultScreenModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -32,6 +87,7 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => ResultScreenModel());
+    _getAudioText();
 
     animationsMap.addAll({
       'containerOnPageLoadAnimation': AnimationInfo(
@@ -80,24 +136,9 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: AppBar(
           backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-          automaticallyImplyLeading: false,
-          leading: FlutterFlowIconButton(
-            borderColor: Colors.transparent,
-            borderRadius: 30.0,
-            borderWidth: 1.0,
-            buttonSize: 60.0,
-            icon: Icon(
-              Icons.arrow_back_rounded,
-              color: FlutterFlowTheme.of(context).primaryText,
-              size: 30.0,
-            ),
-            onPressed: () async {
-              context.pop();
-              Navigator.pop(context);
-            },
-          ),
+          iconTheme: IconThemeData(color: Colors.grey),
           title: Text(
-            'Profile',
+            widget.audioFile.Name,
             style: FlutterFlowTheme.of(context).headlineMedium.override(
                   fontFamily: 'Outfit',
                   letterSpacing: 0.0,
@@ -112,7 +153,7 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Expanded(
+              Flexible(
                 child: Align(
                   alignment: AlignmentDirectional(0.0, 0.0),
                   child: Padding(
@@ -143,24 +184,12 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 0.0, 0.0),
-                              child: Text(
-                                '분석결과',
-                                style: FlutterFlowTheme.of(context)
-                                    .headlineLarge
-                                    .override(
-                                      fontFamily: 'Outfit',
-                                      letterSpacing: 0.0,
-                                    ),
-                              ),
-                            ),
+                            SizedBox(height: 20),
                             Align(
                               alignment: AlignmentDirectional(0.0, 0.0),
                               child: CircularPercentIndicator(
-                                percent: 0.5,
-                                radius: 100.0,
+                                percent: TotalVoicephishingCheck,
+                                radius: 90.0,
                                 lineWidth: 17.0,
                                 animation: true,
                                 animateFromLastPercent: true,
@@ -169,7 +198,7 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
                                 backgroundColor:
                                     FlutterFlowTheme.of(context).accent4,
                                 center: Text(
-                                  '50%',
+                                  '${(TotalVoicephishingCheck*100).toStringAsFixed(0)}%',
                                   style: FlutterFlowTheme.of(context)
                                       .headlineSmall
                                       .override(
@@ -180,10 +209,11 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
                                 ),
                               ),
                             ),
+                            SizedBox(height: 20),
                             Align(
                               alignment: AlignmentDirectional(0.0, 0.0),
                               child: Text(
-                                '보이스피싱이 의심됩니다',
+                                VoicePhishingShow,
                                 style: FlutterFlowTheme.of(context)
                                     .headlineSmall
                                     .override(
@@ -224,103 +254,70 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
                         ],
                         borderRadius: BorderRadius.circular(12.0),
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ListView(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      4.0, 12.0, 4.0, 0.0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 2.0,
-                                          color: Color(0x520E151B),
-                                          offset: Offset(
-                                            0.0,
-                                            1.0,
-                                          ),
-                                        )
-                                      ],
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0.0, 0.0, 16.0, 0.0),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      16.0, 0.0, 16.0, 0.0),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(0.0, 0.0,
-                                                                0.0, 4.0),
-                                                    child: Text(
-                                                      'Vitsoe 1982',
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .titleLarge
-                                                          .override(
-                                                            fontFamily:
-                                                                'Outfit',
-                                                            letterSpacing: 0.0,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            1.0, 0.0),
-                                                    child: Text(
-                                                      '\$126.20',
-                                                      textAlign: TextAlign.end,
-                                                      style: FlutterFlowTheme
-                                                              .of(context)
-                                                          .headlineSmall
-                                                          .override(
-                                                            fontFamily:
-                                                                'Outfit',
-                                                            letterSpacing: 0.0,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                ],
+                      child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        itemCount: audioSentences.length,  // 리스트 항목 수를 지정, 실제 데이터 크기에 맞게 조정
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(4.0, 12.0, 4.0, 0.0),
+                            child: Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: FlutterFlowTheme.of(context).secondaryBackground,
+                                boxShadow: [
+                                  BoxShadow(
+                                    blurRadius: 2.0,
+                                    color: Color(0x520E151B),
+                                    offset: Offset(0.0, 1.0),
+                                  )
+                                ],
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 16.0, 0.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 4.0),
+                                              child: Text(
+                                                audioSentences[index],
+                                                style: FlutterFlowTheme.of(context).titleLarge.override(
+                                                  fontFamily: 'Outfit',
+                                                  letterSpacing: 0.0,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                            Align(
+                                              alignment: AlignmentDirectional(1.0, 0.0),
+                                              child: Text(
+                                                "${(audioVoicephishingCheck[index]*100).toStringAsFixed(0)}%",
+                                                textAlign: TextAlign.end,
+                                                style: FlutterFlowTheme.of(context).headlineSmall.override(
+                                                  fontFamily: 'Outfit',
+                                                  letterSpacing: 0.0,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ).animateOnPageLoad(animationsMap[
-                                      'containerOnPageLoadAnimation']!),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ).animateOnPageLoad(animationsMap['containerOnPageLoadAnimation']!),
+                          );
+                        },
                       ),
                     ),
                   ),
