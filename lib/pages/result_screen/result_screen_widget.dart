@@ -1,15 +1,9 @@
 import '/flutter_flow/flutter_flow_animations.dart';
-import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:provider/provider.dart';
 import 'result_screen_model.dart';
 export 'result_screen_model.dart';
 
@@ -104,8 +98,8 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
             curve: Curves.easeInOut,
             delay: 0.0.ms,
             duration: 600.0.ms,
-            begin: Offset(-50.0, 0.0),
-            end: Offset(0.0, 0.0),
+            begin: const Offset(-50.0, 0.0),
+            end: const Offset(0.0, 0.0),
           ),
         ],
       ),
@@ -136,7 +130,7 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: AppBar(
           backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-          iconTheme: IconThemeData(color: Colors.grey),
+          iconTheme: const IconThemeData(color: Colors.grey),
           title: Text(
             widget.audioFile.Name,
             style: FlutterFlowTheme.of(context).headlineMedium.override(
@@ -144,7 +138,7 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
                   letterSpacing: 0.0,
                 ),
           ),
-          actions: [],
+          actions: const [],
           centerTitle: false,
           elevation: 0.0,
         ),
@@ -155,18 +149,18 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
             children: [
               Flexible(
                 child: Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
+                  alignment: const AlignmentDirectional(0.0, 0.0),
                   child: Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(8.0, 12.0, 8.0, 6.0),
+                        const EdgeInsetsDirectional.fromSTEB(8.0, 12.0, 8.0, 6.0),
                     child: Container(
                       width: double.infinity,
-                      constraints: BoxConstraints(
+                      constraints: const BoxConstraints(
                         maxWidth: 1170.0,
                       ),
                       decoration: BoxDecoration(
                         color: FlutterFlowTheme.of(context).secondaryBackground,
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             blurRadius: 4.0,
                             color: Color(0x33000000),
@@ -179,14 +173,14 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(12.0),
+                        padding: const EdgeInsets.all(12.0),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
+                              alignment: const AlignmentDirectional(0.0, 0.0),
                               child: CircularPercentIndicator(
                                 percent: TotalVoicephishingCheck,
                                 radius: 90.0,
@@ -209,9 +203,9 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
                                 ),
                               ),
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             Align(
-                              alignment: AlignmentDirectional(0.0, 0.0),
+                              alignment: const AlignmentDirectional(0.0, 0.0),
                               child: Text(
                                 VoicePhishingShow,
                                 style: FlutterFlowTheme.of(context)
@@ -231,18 +225,18 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
               ),
               Expanded(
                 child: Align(
-                  alignment: AlignmentDirectional(0.0, 0.0),
+                  alignment: const AlignmentDirectional(0.0, 0.0),
                   child: Padding(
                     padding:
-                        EdgeInsetsDirectional.fromSTEB(8.0, 12.0, 8.0, 12.0),
+                        const EdgeInsetsDirectional.fromSTEB(8.0, 12.0, 8.0, 12.0),
                     child: Container(
                       width: double.infinity,
-                      constraints: BoxConstraints(
+                      constraints: const BoxConstraints(
                         maxWidth: 1170.0,
                       ),
                       decoration: BoxDecoration(
                         color: FlutterFlowTheme.of(context).secondaryBackground,
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             blurRadius: 4.0,
                             color: Color(0x33000000),
@@ -260,12 +254,12 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
                         itemCount: audioSentences.length,  // 리스트 항목 수를 지정, 실제 데이터 크기에 맞게 조정
                         itemBuilder: (BuildContext context, int index) {
                           return Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(4.0, 12.0, 4.0, 0.0),
+                            padding: const EdgeInsetsDirectional.fromSTEB(4.0, 12.0, 4.0, 0.0),
                             child: Container(
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context).secondaryBackground,
-                                boxShadow: [
+                                boxShadow: const [
                                   BoxShadow(
                                     blurRadius: 2.0,
                                     color: Color(0x520E151B),
@@ -275,20 +269,20 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
                               child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 16.0, 0.0),
+                                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 16.0, 0.0),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Expanded(
                                       child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                                        padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Padding(
-                                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 4.0),
+                                              padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 4.0),
                                               child: Text(
                                                 audioSentences[index],
                                                 style: FlutterFlowTheme.of(context).titleLarge.override(
@@ -298,7 +292,7 @@ class _ResultScreenWidgetState extends State<ResultScreenWidget>
                                               ),
                                             ),
                                             Align(
-                                              alignment: AlignmentDirectional(1.0, 0.0),
+                                              alignment: const AlignmentDirectional(1.0, 0.0),
                                               child: Text(
                                                 "${(audioVoicephishingCheck[index]*100).toStringAsFixed(0)}%",
                                                 textAlign: TextAlign.end,

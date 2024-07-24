@@ -1,29 +1,24 @@
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'home_screen_model.dart';
 export 'home_screen_model.dart';
 
 import 'package:voicephishing/model/get_FilePath.dart';
 import 'package:voicephishing/pages/result_screen/result_screen_widget.dart';
 
-class List07UserSearchWidget extends StatefulWidget {
-  const List07UserSearchWidget({super.key});
+class homeScreenWidget extends StatefulWidget {
+  const homeScreenWidget({super.key});
 
   @override
-  State<List07UserSearchWidget> createState() => _List07UserSearchWidgetState();
+  State<homeScreenWidget> createState() => _homeScreenWidgetState();
 }
 
-class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
+class _homeScreenWidgetState extends State<homeScreenWidget>
     with TickerProviderStateMixin {
-  late List07UserSearchModel _model;
+  late homeScreenModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -40,7 +35,6 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
     ManageFilePath a = ManageFilePath();
     AudioFileList = await a.getFileList();
 
-    print('aaaa');
     for (AudioFile file in AudioFileList) {
       print("Path: ${file.Path}, Name: ${file.Name}, Date: ${file.ShowingDate}");
     }
@@ -56,7 +50,7 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
 
     _updateAudioFileList();
 
-    _model = createModel(context, () => List07UserSearchModel());
+    _model = createModel(context, () => homeScreenModel());
 
     _model.textController ??= TextEditingController();
     _model.textFieldFocusNode ??= FocusNode();
@@ -76,8 +70,8 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
             curve: Curves.easeInOut,
             delay: 0.0.ms,
             duration: 600.0.ms,
-            begin: Offset(-50.0, 0.0),
-            end: Offset(0.0, 0.0),
+            begin: const Offset(-50.0, 0.0),
+            end: const Offset(0.0, 0.0),
           ),
         ],
       ),
@@ -116,7 +110,7 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
               letterSpacing: 0.0,
             ),
           ),
-          actions: [],
+          actions: const [],
           centerTitle: false,
           elevation: 0.0,
         ),
@@ -127,7 +121,7 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 16.0, 0.0),
+                padding: const EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 16.0, 0.0),
                 child: TextFormField(
                   controller: _model.textController,
                   focusNode: _model.textFieldFocusNode,
@@ -184,10 +178,10 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
                   _model.textControllerValidator.asValidator(context),
                 ),
               ),
-              _isAnalyzing ? CircularProgressIndicator() : Container(),
+              _isAnalyzing ? const CircularProgressIndicator() : Container(),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 0.0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 0.0),
                   child: ListView.builder(
                     padding: EdgeInsets.zero,
                     scrollDirection: Axis.vertical,
@@ -202,10 +196,10 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
                           );
                         },
                         child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
+                          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
                           child: Container(
                             width: 100.0,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.white,
                               boxShadow: [
                                 BoxShadow(
@@ -219,7 +213,7 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
                               ],
                             ),
                             child: Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
@@ -229,7 +223,7 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                          padding: const EdgeInsetsDirectional.fromSTEB(
                                               12.0, 0.0, 0.0, 0.0),
                                           child: Text(
                                             file.Name,
@@ -237,13 +231,13 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
                                           ),
                                         ),
                                         Padding(
-                                          padding: EdgeInsetsDirectional.fromSTEB(
+                                          padding: const EdgeInsetsDirectional.fromSTEB(
                                               0.0, 4.0, 0.0, 0.0),
                                           child: Row(
                                             mainAxisSize: MainAxisSize.max,
                                             children: [
                                               Padding(
-                                                padding: EdgeInsetsDirectional.fromSTEB(
+                                                padding: const EdgeInsetsDirectional.fromSTEB(
                                                     12.0, 0.0, 0.0, 0.0),
                                                 child: Text(
                                                   file.ShowingDate,
@@ -265,7 +259,7 @@ class _List07UserSearchWidgetState extends State<List07UserSearchWidget>
                                       borderRadius: BorderRadius.circular(40.0),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsets.all(4.0),
+                                      padding: const EdgeInsets.all(4.0),
                                       child: Icon(
                                         Icons.keyboard_arrow_right_rounded,
                                         color: Theme.of(context).secondaryHeaderColor,
