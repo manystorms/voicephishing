@@ -192,7 +192,7 @@ class _homeScreenWidgetState extends State<homeScreenWidget>
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ResultScreenWidget(audioFile: file)),
+                            MaterialPageRoute(builder: (context) => resultScreenWidget(audioFile: file)),
                           );
                         },
                         child: Padding(

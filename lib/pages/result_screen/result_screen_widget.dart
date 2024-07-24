@@ -11,15 +11,15 @@ import 'package:voicephishing/model/get_FilePath.dart';
 import 'package:voicephishing/model/SpeechToText.dart';
 import 'package:voicephishing/model/AnalyzeText.dart';
 
-class ResultScreenWidget extends StatefulWidget {
+class resultScreenWidget extends StatefulWidget {
   final AudioFile audioFile;
-  ResultScreenWidget({required this.audioFile});
+  resultScreenWidget({required this.audioFile});
 
   @override
-  State<ResultScreenWidget> createState() => _ResultScreenWidgetState();
+  State<resultScreenWidget> createState() => _ResultScreenWidgetState();
 }
 
-class _ResultScreenWidgetState extends State<ResultScreenWidget>
+class _ResultScreenWidgetState extends State<resultScreenWidget>
     with TickerProviderStateMixin {
 
   bool _isAnalyzing = true;

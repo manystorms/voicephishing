@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:voicephishing/pages/home_screen/home_screen_widget.dart';
+import 'package:voicephishing/pages/result_screen/result_screen_widget.dart';
 
-import '/index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'serialization_util.dart';
 
@@ -36,24 +36,24 @@ class MyAudioFile {
 }
 
 GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
-  initialLocation: '/list07UserSearch',
+  initialLocation: '/homeScreen',
   debugLogDiagnostics: true,
   refreshListenable: appStateNotifier,
-  errorBuilder: (context, state) => ResultScreenWidget(audioFile: MyAudioFile.dummy),
+  errorBuilder: (context, state) => resultScreenWidget(audioFile: MyAudioFile.dummy),
   routes: [
     FFRoute(
       name: '_initialize',
       path: '/',
-      builder: (context, _) => ResultScreenWidget(audioFile: MyAudioFile.dummy),
+      builder: (context, _) => resultScreenWidget(audioFile: MyAudioFile.dummy),
     ),
     FFRoute(
       name: 'ResultScreen',
       path: '/resultScreen',
-      builder: (context, params) => ResultScreenWidget(audioFile: MyAudioFile.dummy),
+      builder: (context, params) => resultScreenWidget(audioFile: MyAudioFile.dummy),
     ),
     FFRoute(
-      name: 'List07UserSearch',
-      path: '/list07UserSearch',
+      name: 'homeScreen',
+      path: '/homeScreen',
       builder: (context, params) => const homeScreenWidget(),
     )
   ].map((r) => r.toRoute(appStateNotifier)).toList(),
