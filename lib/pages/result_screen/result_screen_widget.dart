@@ -85,7 +85,7 @@ class _ResultScreenWidgetState extends State<resultScreenWidget>
 
     animationsMap.addAll({
       'containerOnPageLoadAnimation': AnimationInfo(
-        trigger: AnimationTrigger.onPageLoad,
+        trigger: AnimationTrigger.onActionTrigger,
         effectsBuilder: () => [
           FadeEffect(
             curve: Curves.easeInOut,
