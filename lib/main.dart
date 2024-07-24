@@ -14,6 +14,7 @@ void main() async {
   usePathUrlStrategy();
 
   await FlutterFlowTheme.initialize();
+  print('a');
 
   runApp(MyApp());
 }
