@@ -6,10 +6,12 @@ import 'flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/nav/nav.dart';
 import 'package:voicephishing/model/backgroundCheck.dart';
+import 'package:voicephishing/model/alert.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeService();
+  await initNotification();
   GoRouter.optionURLReflectsImperativeAPIs = true;
   usePathUrlStrategy();
 

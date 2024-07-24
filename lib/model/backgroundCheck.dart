@@ -36,11 +36,14 @@ void onStart(ServiceInstance service) async {
   if (service is AndroidServiceInstance) {
     service.on('setAsForeground').listen((event) {
       service.setAsForegroundService();
+      print('1');
     });
     service.on('setAsBackground').listen((event) {
       service.setAsBackgroundService();
+      print('2');
     });
   }
+
   service.on('stopService').listen((event) {
     service.stopSelf();
   });
