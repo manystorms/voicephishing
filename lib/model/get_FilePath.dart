@@ -22,8 +22,9 @@ class ManageFilePath {
       return AudioDirectoryPath;
     }else{
       final String downloadsDirectoryPath = await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOADS);
-      //return AudioDirectoryPath = p.join(downloadsDirectoryPath, 'KakaoTalk');
+      //return AudioDirectoryPath = path.join(downloadsDirectoryPath, 'Call');
       return AudioDirectoryPath = downloadsDirectoryPath;
+      //return AudioDirectoryPath = '/storage/emulated/0/Recordings/Call';
     }
   }
 
