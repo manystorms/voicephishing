@@ -3,9 +3,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 final notifications = FlutterLocalNotificationsPlugin();
 
 initNotification() async {
-  var androidSetting = AndroidInitializationSettings('main_icon');
+  var androidSetting = const AndroidInitializationSettings('main_icon');
 
-  var iosSetting = DarwinInitializationSettings(
+  var iosSetting = const DarwinInitializationSettings(
     requestAlertPermission: true,
     requestBadgePermission: true,
     requestSoundPermission: true,

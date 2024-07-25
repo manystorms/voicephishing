@@ -42,6 +42,7 @@ dependencies:
   tflite_flutter: ^0.10.4
   flutter_background_service: ^5.0.6
   flutter_local_notifications: ^17.2.1
+  flutter_launcher_icons: ^0.13.1
 
   auto_size_text: 3.0.0
   cached_network_image: 3.3.1
@@ -73,6 +74,12 @@ dependencies:
   url_launcher_ios: 6.2.5
   url_launcher_platform_interface: 2.3.2
   flutter_localization: 0.2.0
+
+flutter_icons:
+  ios: true
+  android: true
+  image_path: "assets/images/icon.png"
+  remove_alpha_ios: true
 
 dev_dependencies:
   flutter_test:
