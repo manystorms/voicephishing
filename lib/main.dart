@@ -10,8 +10,8 @@ import 'package:voicephishing/model/alert.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //await initializeService();
   await initNotification();
+  await initializeService();
   GoRouter.optionURLReflectsImperativeAPIs = true;
   usePathUrlStrategy();
 
