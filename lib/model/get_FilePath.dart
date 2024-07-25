@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:external_path/external_path.dart';
-import 'package:path/path.dart' as p;
 
 class ManageFilePath {
   static String AudioDirectoryPath = "No Data";
@@ -28,8 +27,8 @@ class ManageFilePath {
     }
   }
 
-  Future<List<AudioFile>> getFileList() async {
-    if(await _getAudioStoragePermission() == false) return [];
+  Future<List<AudioFile>> getFileList(bool backgroundAccess) async {
+    if(backgroundAccess == false && await _getAudioStoragePermission() == false) return [];
 
     await _getAudioDirectoryPath();
     Directory dir = Directory(AudioDirectoryPath);

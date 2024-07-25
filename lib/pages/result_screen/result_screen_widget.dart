@@ -35,7 +35,12 @@ class _ResultScreenWidgetState extends State<resultScreenWidget>
 
     await _getAnalyzeData();
 
-    VoicePhishingShow = '보이스피싱이 의심됩니다';
+    if(TotalVoicephishingCheck >= 70) {
+      VoicePhishingShow = '보이스피싱이 의심됩니다';
+    }else{
+      VoicePhishingShow = '보이스피싱은 아닌 것으로 확인됩니다';
+    }
+
     _isAnalyzing = false;
 
     setState(() {});

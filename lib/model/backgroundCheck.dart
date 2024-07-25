@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:voicephishing/model/alert.dart';
+import 'package:voicephishing/model/get_FilePath.dart';
 
 void startBackgroundService() {
   final service = FlutterBackgroundService();
@@ -65,8 +68,45 @@ void onStart(ServiceInstance service) async {
 
   service.on("start").listen((event) {});
 
-  Timer.periodic(const Duration(seconds: 1), (timer) {
-    socket.emit("event-name", "your-message");
-    print("service is successfully running ${DateTime.now().second}");
+  bool backGroundWorking = false;
+
+  Timer.periodic(const Duration(seconds: 1), (timer) async {
+    if(backGroundWorking == false) {
+      backGroundWorking = true;
+      socket.emit("event-name", "your-message");
+
+      final lastCheckTime = await getLastCheckTime();
+      print('a');
+
+      List<AudioFile> AudioFileList = [];
+      ManageFilePath a = ManageFilePath();
+      AudioFileList = await a.getFileList(true);
+
+      for (AudioFile file in AudioFileList) {
+        if(lastCheckTime.isBefore(file.Date)) {
+          showPushAlarm('확인중', '통화가 끝난 것이 감지되었습니다: ${file.Name}');
+          print('aa: ${file.Name}');
+        }
+      }
+      print(lastCheckTime);
+
+      storeLastCheckTime();
+      backGroundWorking = false;
+    }
   });
+}
+
+void storeLastCheckTime() async{
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  pref.setString('time', DateTime.now().toString());
+}
+
+Future<DateTime> getLastCheckTime() async{
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  final storedData = pref.getString('time');
+  if(storedData == null) {
+    return DateTime(1970, 1, 1);
+  }else{
+    return DateTime.parse(storedData);
+  }
 }

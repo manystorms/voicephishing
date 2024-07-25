@@ -33,10 +33,10 @@ class _homeScreenWidgetState extends State<homeScreenWidget>
     });
 
     ManageFilePath a = ManageFilePath();
-    AudioFileList = await a.getFileList();
+    AudioFileList = await a.getFileList(false);
 
     for (AudioFile file in AudioFileList) {
-      print("Path: ${file.Path}, Name: ${file.Name}, Date: ${file.ShowingDate}");
+      print("Path: ${file.Path}, Name: ${file.Name}, Date: ${file.ShowingDate}, DateTime: ${file.Date}");
     }
 
     setState(() {
