@@ -122,7 +122,7 @@ void backgroundProcess() async{
         }
         TotalVoicephishingCheck = TotalRes/TotalAudioTextLen.toDouble();
 
-        if(TotalVoicephishingCheck >= 70) {
+        if(TotalVoicephishingCheck*100 >= 70) {
           showPushAlarm(
               '보이스피싱 의심',
               '해당 통화가 보이스피싱일 가능성이 $TotalVoicephishingCheck% 입니다(파일명: ${file.Name})'
